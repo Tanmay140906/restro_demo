@@ -15,6 +15,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc; /* bg-slate-50 */
+            display: flex;
         }
         /* Page transition helper */
         .page {
@@ -28,7 +29,7 @@
         .qty-btn {
             /* Brand color: teal-600 */
             @apply w-8 h-8 rounded-full bg-teal-600 text-white text-lg font-bold flex items-center justify-center transition-transform duration-100 ease-in-out active:scale-90 shadow;
-        }
+        }   
         .qty-btn-minus {
              /* Brand color outline */
              @apply w-8 h-8 rounded-full bg-white border border-teal-600 text-teal-600 text-lg font-bold flex items-center justify-center transition-transform duration-100 ease-in-out active:scale-90;
@@ -36,6 +37,15 @@
         .add-btn {
             /* Brand color light */
             @apply px-4 py-1.5 rounded-lg bg-teal-50 text-teal-700 font-semibold border border-teal-600 transition-transform duration-100 ease-in-out active:scale-95 hover:bg-teal-100;
+            padding: 4px;
+            border-radius: 10px;
+        }
+        .add-btn:hover{
+            background: rgb(5, 188, 5);
+            color:white;
+        }
+        .div1{
+            cursor: pointer;
         }
     </style>
 </head>
@@ -47,13 +57,19 @@
         <!-- ===== Page 1: Menu Page ===== -->
         <div id="menu-page" class="page active">
             <!-- Header -->
-            <header class="p-5 bg-teal-600 text-white sticky top-0 z-10 shadow-md">
-                <h1 class="text-3xl font-bold tracking-tight">SitNEat</h1>
-                <p class="text-teal-100 text-sm">Freshly prepared, just for you.</p>
+
+            <header class=" p-5 flex items-center justify-between bg-teal-600 text-white sticky top-0 z-10  shadow-md">
+                <div class="div">
+                    <h1 class="text-3xl font-bold tracking-tight">SitNEat</h1>
+                    <p class="text-teal-100 text-sm">Freshly prepared, just for you.</p>
+                </div>
+                <div class="div1" onclick="fnslert();">
+                    Menu
+                </div>
             </header>
             
             <!-- Menu Items Container -->
-            <main id="menu-items-container" class="p-5 space-y-5">
+            <main id="menu-items-container" class="p-5 space-y-5 w-full">
                 <!-- Menu items will be dynamically injected here by JS -->
             </main>
 
@@ -125,9 +141,46 @@
                 <button onclick="showPage('menu')" class="mt-10 px-8 py-3 rounded-lg bg-teal-600 text-white font-semibold shadow-md hover:bg-teal-700 transition-all">
                     Order More
                 </button>
+                <button onclick="getBill()" class="mt-10 px-8 py-3 rounded-lg bg-teal-600 text-white font-semibold shadow-md hover:bg-teal-700 transition-all">
+                    Get Bill
+                </button>
             </div>
         </div>
+        <div id="bill-page" class="page">
+            <div class="flex flex-col items-center justify-center h-[90vh] p-6 text-center ">
+                <h1 class="text-3xl font-bold text-teal-600 mt-20 mb-4 ">Your Bill Summary:</h1>
+                <table class="table-auto border border-gray-300 text-gray-600 text-base w-64 mb-4">
+                    <tbody>
+                        <tr class="border-b border-gray-300">
+                        <td class="px-3 py-2 font-semibold border-r border-gray-300 text-lg">Item</td>
+                        <td class="px-3 py-2 font-semibold text-lg">Amount (₹)</td>
+                        </tr>
+                        <tr class="border-b border-gray-300">
+                        <td class="px-3 py-2 border-r border-gray-300 text-lg">Total Bill</td>
+                        <td class="px-3 py-2 text-lg"><span class="total-amt"></span></td>
+                        </tr>
+                        <tr class="border-b border-gray-300">
+                        <td class="px-3 py-2 border-r border-gray-300 text-lg">GST (5%)</td>
+                        <td class="px-3 py-2 text-lg"><span class="gst-amt"></span></td>
+                        </tr>
+                        <tr class="border-t border-gray-300 font-semibold">
+                        <td class="px-3 py-2 border-r border-gray-300 text-lg">Grand Total</td>
+                        <td class="px-3 py-2 text-lg"><span class="grand-total-amt"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
 
+                <p class="text-3xl font-bold text-teal-600 mb-4">Scan to Pay</p>
+
+                <img src="assets/qr.png" class="mb-4">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Thank You For Visiting!</h1>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Please Visit Again 👋</h1>
+
+                <button onclick="showPage('menu')" class="mt-10 px-8 py-3 rounded-lg bg-teal-600 text-white font-semibold shadow-md hover:bg-teal-700 transition-all">
+                    Done!
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- JavaScript Logic -->
@@ -136,15 +189,15 @@
 
         // The master list of all available menu items
         const menuItems = [
-            { id: 1, name: 'Classic Burger', price: 150, image: 'https://placehold.co/100x100/F9A825/333333?text=Burger' },
-            { id: 2, name: 'Veggie Pizza', price: 250, image: 'https://placehold.co/100x100/E53935/FFFFFF?text=Pizza' },
-            { id: 3, name: 'Caesar Salad', price: 180, image: 'https://placehold.co/100x100/7CB342/FFFFFF?text=Salad' },
-            { id: 4, name: 'Pasta Carbonara', price: 220, image: 'https://placehold.co/100x100/FB8C00/FFFFFF?text=Pasta' },
-            { id: 5, name: 'Paneer Butter Masala', price: 280, image: 'https://placehold.co/100x100/5D4037/FFFFFF?text=Paneer' },
-            { id: 6, name: 'Veg Fried Rice', price: 320, image: 'https://placehold.co/100x100/F9A825/333333?text=FriedRice' },
-            { id: 7, name: 'Butter Naan', price: 75, image: 'https://placehold.co/100x100/E53935/FFFFFF?text=Naan' },
-            { id: 8, name: 'Vanilla Ice Cream', price: 80, image: 'https://placehold.co/100x100/FB8C00/FFFFFF?text=Vanilla' },
-            { id: 9, name: 'Chocolate Brownie', price: 120, image: 'https://placehold.co/100x100/5D4037/FFFFFF?text=Brownie' }
+            { id: 1, name: 'Classic Burger', price: 150, image: 'assets/burger.jpeg' },
+            { id: 2, name: 'Veggie Pizza', price: 250, image: 'assets/pizza.jpeg' },
+            { id: 3, name: 'Caesar Salad', price: 180, image: 'assets/salad.jpeg' },
+            { id: 4, name: 'White Sauce Pasta', price: 220, image: 'assets/pasta.webp' },
+            { id: 5, name: 'Paneer Butter Masala', price: 280, image: 'assets/paneer.jpg' },
+            { id: 6, name: 'Veg Fried Rice', price: 320, image: 'assets/rice.webp' },
+            { id: 7, name: 'Butter Naan', price: 75, image: 'assets/naan.jpeg' },
+            { id: 8, name: 'Vanilla Ice Cream', price: 80, image: 'assets/vanilla.jpeg' },
+            { id: 9, name: 'Chocolate Brownie', price: 120, image: 'assets/choc.jpeg' }
         ];
 
         // The cart object, stores quantity by item ID
@@ -210,13 +263,24 @@
             // In a real app, this would send data to a server
             
             showPage('success');
-            
+            console.log(cart);
             // Reset cart and update UI for the next order
             resetCart();
             renderMenu();
             updateCartSummary();
         }
 
+        function getBill(){
+            showPage('bill');
+            const amt=JSON.parse(localStorage.getItem('total'));
+            const amtId=document.getElementsByClassName("total-amt")[0];
+            const gstId=document.getElementsByClassName("gst-amt")[0];
+            const totalId=document.getElementsByClassName("grand-total-amt")[0];
+            
+            amtId.innerHTML=`₹ ${amt}`;
+            gstId.innerHTML=`₹ ${amt*0.05}`;
+            totalId.innerHTML=`₹ ${amt*1.05}`;
+        }
         // --- RENDER FUNCTIONS (Updating the UI) ---
 
         /**
@@ -234,7 +298,7 @@
 
                 // Item Info (Image, Name, Price)
                 const infoHtml = `
-                    <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-4 mr-2">
                         <img src="${item.image}" alt="${item.name}" class="w-20 h-20 rounded-lg object-cover">
                         <div>
                             <div class="font-semibold text-lg text-gray-900">${item.name}</div>
@@ -277,14 +341,13 @@
             let total = 0;
 
             listContainer.innerHTML = ''; // Clear list
-
             menuItems.forEach(item => {
                 const quantity = cart[item.id];
                 if (quantity > 0) {
                     // Only show items that are in the cart
                     const itemTotal = item.price * quantity;
                     total += itemTotal;
-
+                    localStorage.setItem('total',JSON.stringify(total));
                     const itemEl = document.createElement('div');
                     itemEl.className = 'flex justify-between items-center py-2';
                     itemEl.innerHTML = `
@@ -308,6 +371,9 @@
         /**
          * Updates the cart summary bar (item count and total price)
          */
+        function fnslert(){
+            alert("This is demo");
+        }
         function updateCartSummary() {
             const countEl = document.getElementById('cart-item-count');
             const priceEl = document.getElementById('cart-total-price');
